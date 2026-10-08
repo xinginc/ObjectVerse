@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建学习笔记 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=notes-profile-align-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('notes')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Publish Note</p>
+            <h1>创建学习笔记</h1>
+            <p class="page-description">上传图片、整理描述和正文，发布后会出现在学习笔记交流平台中。</p>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" href="/notes-community">返回笔记列表</a>
+        </div>
+    </section>
+
+    <section class="form-section note-editor-panel">
+        <form class="project-form" action="/notes-community" method="post" enctype="multipart/form-data">
+            <label>
+                标题
+                <input name="title" type="text" placeholder="例如：封装学习卡片" required>
+            </label>
+            <label>
+                分类
+                <input name="category" type="text" placeholder="Java/OOP">
+            </label>
+            <label>
+                标签
+                <input name="tags" type="text" placeholder="封装,Java,OOP">
+            </label>
+            <label>
+                本地图片
+                <input name="imageFile" type="file" accept="image/*">
+            </label>
+            <label class="full-row">
+                摘要描述
+                <textarea name="description" rows="3" placeholder="用两三句话说明这篇笔记解决什么问题。"></textarea>
+            </label>
+            <label class="full-row">
+                笔记正文
+                <textarea name="content" rows="10" placeholder="写下知识点、示例、易错点或你的理解。" required></textarea>
+            </label>
+            <div class="form-actions full-row">
+                <button type="submit">发布学习笔记</button>
+                <a href="/notes-community">取消</a>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>

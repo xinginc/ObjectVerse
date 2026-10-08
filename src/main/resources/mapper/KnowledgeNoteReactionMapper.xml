@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.objectverse.mapper.KnowledgeNoteReactionMapper">
+
+    <resultMap id="KnowledgeNoteReactionResultMap" type="com.example.objectverse.entity.KnowledgeNoteReaction">
+        <id property="id" column="id"/>
+        <result property="noteId" column="note_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="reactionType" column="reaction_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <select id="findActive" resultMap="KnowledgeNoteReactionResultMap">
+        SELECT id,
+               note_id,
+               user_id,
+               reaction_type,
+               create_time,
+               update_time,
+               deleted
+        FROM knowledge_note_reaction
+        WHERE note_id = #{noteId}
+          AND user_id = #{userId}
+          AND reaction_type = #{reactionType}
+          AND deleted = 0
+        LIMIT 1
+    </select>
+
+    <insert id="insert" parameterType="com.example.objectverse.entity.KnowledgeNoteReaction" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_note_reaction (
+            note_id,
+            user_id,
+            reaction_type,
+            create_time,
+            update_time,
+            deleted
+        ) VALUES (
+            #{noteId},
+            #{userId},
+            #{reactionType},
+            #{createTime},
+            #{updateTime},
+            #{deleted}
+        )
+    </insert>
+
+    <update id="softDelete">
+        UPDATE knowledge_note_reaction
+        SET deleted = 1,
+            update_time = NOW()
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+</mapper>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${codeFile.fileName} + ' - ObjectVerse'">代码预览 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Generated Java Source</p>
+            <h1 th:text="${codeFile.fileName}">Course.java</h1>
+        </div>
+        <a class="secondary-link" th:href="@{/projects/{projectId}/code-generator(projectId=${projectId})}">返回代码生成器</a>
+    </section>
+
+    <section class="detail-section">
+        <dl class="detail-grid">
+            <div><dt>文件名</dt><dd th:text="${codeFile.fileName}">Course.java</dd></div>
+            <div><dt>包名</dt><dd th:text="${codeFile.packageName}">com.example.domain</dd></div>
+            <div><dt>文件类型</dt><dd><span class="status-badge" th:text="${codeFile.fileType}">JAVA_CLASS</span></dd></div>
+        </dl>
+    </section>
+
+    <section class="detail-section relation-summary">
+        <div class="section-heading">
+            <p class="section-label">Source Code</p>
+            <h2>生成的 Java 源代码</h2>
+        </div>
+        <div class="code-preview-section">
+            <pre><code th:text="${codeFile.codeContent}">public class Course {
+}</code></pre>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

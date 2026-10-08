@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ObjectVerse - Java OOP 智能学习与建模系统</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+    <style>
+        @media (min-width: 769px) {
+            body {
+                overflow: hidden !important;
+            }
+
+            .home-dashboard.page-shell {
+                position: fixed !important;
+                top: 8px !important;
+                right: 6px !important;
+                bottom: 8px !important;
+                left: 316px !important;
+                width: auto !important;
+                max-width: none !important;
+                height: auto !important;
+                min-height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: grid !important;
+                grid-template-rows: 39% 34% 24% !important;
+                gap: 8px !important;
+                overflow: hidden !important;
+            }
+
+            .home-dashboard .hero-panel {
+                min-height: 0 !important;
+                height: 100% !important;
+                padding: 28px 34px 24px !important;
+                grid-template-columns: minmax(0, 0.95fr) minmax(545px, 0.86fr) !important;
+                gap: 18px !important;
+                border-radius: 18px !important;
+                overflow: hidden !important;
+            }
+
+            .home-dashboard .hero-content {
+                position: relative !important;
+                z-index: 2 !important;
+                padding-bottom: 8px !important;
+            }
+
+            .home-dashboard .hero-content h1 {
+                margin: 6px 0 12px !important;
+                font-size: clamp(34px, 2.35vw, 44px) !important;
+                line-height: 1.12 !important;
+                white-space: nowrap !important;
+            }
+
+            .home-dashboard .hero-text {
+                max-width: 700px !important;
+                margin: 0 0 22px !important;
+                font-size: 14px !important;
+                line-height: 1.65 !important;
+            }
+
+            .home-dashboard .hero-actions {
+                gap: 18px !important;
+                position: relative !important;
+                z-index: 3 !important;
+                margin-top: 4px !important;
+            }
+
+            .home-dashboard .hero-actions a {
+                min-height: 42px !important;
+                padding: 10px 22px !important;
+            }
+
+            .home-dashboard .hero-actions .gradient-button {
+                background: linear-gradient(135deg, #3159f4, #6657ff) !important;
+                box-shadow: 0 14px 28px rgba(49, 89, 244, 0.28) !important;
+            }
+
+            .home-dashboard .hero-actions .outline-button {
+                color: #3159f4 !important;
+                background: rgba(255, 255, 255, 0.82) !important;
+                border-color: rgba(124, 147, 223, 0.28) !important;
+            }
+
+            .home-dashboard .hero-visual {
+                width: 100% !important;
+                height: 100% !important;
+                min-height: 0 !important;
+                transform: translateX(14px) !important;
+                transform-origin: center right !important;
+            }
+        }
+
+        .ov-hero-visual {
+            position: relative;
+            height: 100%;
+            min-height: 190px;
+            overflow: hidden;
+            background:
+                    linear-gradient(rgba(119, 146, 230, 0.10) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(119, 146, 230, 0.10) 1px, transparent 1px),
+                    radial-gradient(circle at 82% 8%, rgba(43, 210, 223, 0.26), transparent 13rem),
+                    radial-gradient(circle at 12% 82%, rgba(112, 96, 255, 0.20), transparent 12rem),
+                    linear-gradient(145deg, rgba(255, 255, 255, 0.62), rgba(235, 240, 255, 0.42));
+            background-size: 34px 34px, 34px 34px, auto, auto, auto;
+            border: 1px solid rgba(255, 255, 255, 0.62);
+            border-radius: 24px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62), 0 22px 54px rgba(72, 89, 156, 0.12);
+        }
+
+        .ov-hero-window {
+            position: absolute;
+            inset: 24px 24px 26px 58px;
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 0.92fr) minmax(0, 1.18fr);
+            gap: 14px;
+            align-items: center;
+            padding: 40px 22px 24px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.58);
+            border: 1px solid rgba(255, 255, 255, 0.74);
+            box-shadow: 0 18px 44px rgba(72, 89, 156, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.68);
+        }
+
+        .ov-hero-dots {
+            position: absolute;
+            top: 18px;
+            left: 22px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .ov-hero-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #5c78ff;
+        }
+
+        .ov-hero-dots span:nth-child(2) {
+            background: #8b69ff;
+        }
+
+        .ov-hero-dots span:nth-child(3) {
+            background: #41c6d7;
+        }
+
+        .ov-visual-card {
+            position: relative;
+            z-index: 4;
+            min-width: 0;
+            padding: 13px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(160, 176, 230, 0.34);
+            border-radius: 14px;
+            box-shadow: 0 18px 36px rgba(62, 79, 142, 0.14);
+            backdrop-filter: blur(10px);
+        }
+
+        .ov-visual-uml {
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 0.76);
+        }
+
+        .ov-visual-code {
+            color: #fff;
+            background: linear-gradient(145deg, rgba(31, 39, 86, 0.96), rgba(50, 45, 112, 0.94));
+            border-color: rgba(255, 255, 255, 0.22);
+            box-shadow: 0 20px 42px rgba(31, 39, 86, 0.26);
+        }
+
+        .ov-visual-card strong {
+            display: block;
+            margin-bottom: 7px;
+            color: #10213f;
+            font-size: 13px;
+        }
+
+        .ov-visual-code strong {
+            color: #fff;
+        }
+
+        .ov-visual-card p,
+        .ov-visual-card pre {
+            position: relative;
+            z-index: 2;
+            margin: 0;
+            color: #526584;
+            font-size: 9.5px;
+            line-height: 1.5;
+        }
+
+        .ov-visual-code pre {
+            max-width: 100%;
+            overflow: hidden;
+            color: #fff;
+            font-size: 9px;
+            line-height: 1.48;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .ov-visual-pill {
+            position: absolute;
+            z-index: 1;
+            display: inline-flex;
+            min-height: 30px;
+            align-items: center;
+            padding: 6px 11px;
+            color: rgba(255, 255, 255, 0.92);
+            font-weight: 900;
+            background: linear-gradient(135deg, rgba(113, 94, 255, 0.82), rgba(157, 130, 255, 0.74));
+            border-radius: 10px;
+            box-shadow: 0 12px 26px rgba(113, 94, 255, 0.18);
+        }
+
+        .ov-pill-oop {
+            left: 18px;
+            top: 52%;
+        }
+
+        .ov-pill-uml {
+            right: 27%;
+            top: 24px;
+        }
+
+        .ov-visual-line {
+            position: absolute;
+            z-index: 2;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(92, 120, 255, 0.04), rgba(92, 120, 255, 0.34), rgba(92, 120, 255, 0.04));
+            transform-origin: left center;
+        }
+
+        .ov-line-a {
+            left: 31%;
+            top: 52%;
+            width: 13%;
+            transform: rotate(12deg);
+        }
+
+        .ov-line-b {
+            left: 62%;
+            top: 48%;
+            width: 14%;
+            transform: rotate(-8deg);
+        }
+
+        .ov-home-section {
+            padding: 14px 16px !important;
+            border-radius: 18px !important;
+            overflow: hidden !important;
+        }
+
+        .ov-home-section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .ov-home-section-head h2 {
+            margin: 0;
+            color: #10213f;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .ov-feature-board {
+            display: grid;
+            height: calc(100% - 34px);
+            grid-template-columns: 27.4% repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .ov-feature-tile {
+            position: relative;
+            display: grid;
+            height: 100%;
+            padding: 16px 14px 14px;
+            color: inherit;
+            text-decoration: none;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(245, 248, 255, 0.56));
+            border: 1px solid rgba(150, 169, 224, 0.30);
+            border-radius: 12px;
+            box-shadow: 0 14px 34px rgba(62, 79, 142, 0.08);
+            grid-template-rows: auto auto minmax(0, 1fr);
+            align-content: start;
+        }
+
+        .ov-feature-main {
+            padding: 16px;
+            background:
+                    radial-gradient(circle at 0% 0%, rgba(88, 82, 255, 0.46), transparent 15rem),
+                    radial-gradient(circle at 78% 10%, rgba(63, 110, 255, 0.28), transparent 11rem),
+                    radial-gradient(circle at 20% 92%, rgba(42, 205, 224, 0.20), transparent 10rem),
+                    linear-gradient(145deg, rgba(221, 229, 255, 0.92), rgba(242, 246, 255, 0.58));
+            border-color: rgba(92, 86, 255, 0.58);
+            box-shadow: 0 20px 50px rgba(76, 78, 178, 0.18);
+        }
+
+        .ov-feature-icon {
+            display: grid;
+            width: 32px;
+            height: 32px;
+            place-items: center;
+            color: #3159f4;
+            font-weight: 900;
+            background: #eef3ff;
+            border: 1px solid rgba(111, 135, 255, 0.22);
+            border-radius: 16px;
+        }
+
+        .ov-feature-main .ov-feature-icon {
+            width: 44px;
+            height: 44px;
+            color: #fff;
+            background: linear-gradient(135deg, #4167f5, #7359ff);
+            box-shadow: 0 12px 24px rgba(65, 103, 245, 0.28);
+        }
+
+        .ov-feature-tile h3 {
+            margin: 11px 0 8px;
+            color: #10213f;
+            font-size: 17px;
+            line-height: 1.25;
+        }
+
+        .ov-feature-main h3 {
+            font-size: 22px;
+        }
+
+        .ov-feature-tile p {
+            margin: 0;
+            color: #526584;
+            font-size: 12px;
+            line-height: 1.62;
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+        }
+
+        .ov-feature-tile strong {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            display: inline-flex;
+            width: fit-content;
+            min-height: 28px;
+            align-items: center;
+            gap: 8px;
+            padding: 0 10px;
+            color: #3159f4;
+            font-size: 12px;
+            font-weight: 900;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(120, 140, 255, 0.26);
+            border-radius: 999px;
+        }
+
+        .ov-feature-main strong {
+            color: #fff;
+            background: linear-gradient(135deg, #3159f4, #6657ff);
+            border-color: rgba(255, 255, 255, 0.36);
+            box-shadow: 0 12px 24px rgba(49, 89, 244, 0.24);
+        }
+
+        .ov-feature-tile:nth-child(3) {
+            background: radial-gradient(circle at 18% 0%, rgba(30, 183, 198, 0.15), transparent 9rem), linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(244, 253, 255, 0.56));
+        }
+
+        .ov-feature-tile:nth-child(4) {
+            background: radial-gradient(circle at 18% 0%, rgba(242, 138, 46, 0.14), transparent 9rem), linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 250, 245, 0.56));
+        }
+
+        .ov-feature-tile:nth-child(5) {
+            background: radial-gradient(circle at 18% 0%, rgba(38, 203, 181, 0.15), transparent 9rem), linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(244, 255, 252, 0.56));
+        }
+
+        .ov-path-board {
+            position: relative;
+            display: grid;
+            height: calc(100% - 28px);
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 12px;
+            align-items: center;
+        }
+
+        .ov-path-board::before {
+            content: "";
+            position: absolute;
+            left: 3%;
+            right: 3%;
+            top: 50%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(83, 113, 235, 0.28), transparent);
+            pointer-events: none;
+        }
+
+        .ov-path-step {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            height: 100%;
+            grid-template-columns: 32px minmax(0, 1fr);
+            column-gap: 9px;
+            padding: 10px 12px;
+            place-items: center;
+            text-align: left;
+            background: radial-gradient(circle at 16% 10%, rgba(77, 107, 255, 0.13), transparent 5rem), linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(247, 250, 255, 0.62));
+            border: 1px solid rgba(150, 169, 224, 0.28);
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(62, 79, 142, 0.07);
+        }
+
+        .ov-path-step span {
+            display: grid;
+            width: 28px;
+            height: 28px;
+            place-items: center;
+            color: #fff;
+            font-weight: 900;
+            background: linear-gradient(135deg, #4167f5, #725dff);
+            border-radius: 999px;
+            box-shadow: 0 10px 18px rgba(65, 103, 245, 0.22);
+        }
+
+        .ov-path-step strong {
+            justify-self: start;
+            color: #10213f;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .ov-path-step small {
+            grid-column: 2;
+            justify-self: start;
+            color: #64728f;
+            font-size: 10px;
+            line-height: 1.35;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('home')}"></nav>
+
+<main class="page-shell home-dashboard">
+    <section class="hero-panel glass-card">
+        <div class="hero-content">
+            <p class="course-label">Java OOP Lab</p>
+            <h1>
+                <span>ObjectVerse</span>
+                Java OOP 智能学习与建模系统
+            </h1>
+            <p class="hero-text">
+                围绕 Java 面向对象开发过程，提供项目构思、类模型设计、代码审查、知识巩固与学习交流支持，让项目从想法到实现的过程更清晰。
+            </p>
+            <div class="hero-actions">
+                <a class="gradient-button" href="/projects"><span class="button-icon">W</span>进入项目工作台</a>
+                <a class="outline-button" href="/idea-assistant"><span class="button-icon">I</span>开始项目构思</a>
+            </div>
+        </div>
+
+        <div class="hero-visual ov-hero-visual" aria-hidden="true">
+            <div class="ov-hero-window">
+                <div class="ov-hero-dots"><span></span><span></span><span></span></div>
+                <span class="ov-visual-pill ov-pill-oop">OOP</span>
+                <span class="ov-visual-pill ov-pill-uml">UML</span>
+                <article class="ov-visual-card ov-visual-oop">
+                    <strong>OOP</strong>
+                    <p>• 封装 Encapsulation</p>
+                    <p>• 继承 Inheritance</p>
+                    <p>• 多态 Polymorphism</p>
+                    <p>• 抽象 Abstraction</p>
+                </article>
+                <article class="ov-visual-card ov-visual-uml">
+                    <strong>AI Assistant</strong>
+                    <p>• 项目构思 Idea</p>
+                    <p>• 建模建议 Model</p>
+                    <p>• 代码审查 Review</p>
+                    <p>• 练习生成 Practice</p>
+                </article>
+                <article class="ov-visual-card ov-visual-code">
+                    <strong>Java Code</strong>
+                    <pre>public class Project {
+  private Long id;
+  private String name;
+}</pre>
+                </article>
+                <i class="ov-visual-line ov-line-a"></i>
+                <i class="ov-visual-line ov-line-b"></i>
+            </div>
+        </div>
+    </section>
+
+    <section class="ov-home-section glass-card">
+        <div class="ov-home-section-head"><h2>核心功能</h2></div>
+        <div class="ov-feature-board">
+            <a class="ov-feature-tile ov-feature-main" href="/projects"><span class="ov-feature-icon">W</span><h3>项目工作台</h3><p>创建并管理个人 Java 项目，维护类、属性、方法和关系模型，生成 UML 与 Java 代码，并可选择公开项目供他人参考。</p><strong>进入工作台 <span>→</span></strong></a>
+            <a class="ov-feature-tile" href="/idea-assistant"><span class="ov-feature-icon">I</span><h3>项目构思助手</h3><p>输入项目想法，生成候选类、属性、方法和对象关系建议。</p><strong>进入 <span>→</span></strong></a>
+            <a class="ov-feature-tile" href="/code-review"><span class="ov-feature-icon">C</span><h3>代码审查助手</h3><p>从封装、继承、多态、设计模式和代码规范角度审查 Java 代码。</p><strong>进入 <span>→</span></strong></a>
+            <a class="ov-feature-tile" href="/knowledge-practice"><span class="ov-feature-icon">K</span><h3>知识点巩固助手</h3><p>围绕项目建模与代码审查内容，沉淀 Java/OOP 知识并进行复习训练。</p><strong>进入 <span>→</span></strong></a>
+            <a class="ov-feature-tile" href="/notes-community"><span class="ov-feature-icon">N</span><h3>学习笔记交流平台</h3><p>整理学习笔记，浏览公开项目与经验记录，形成可参考的学习资料库。</p><strong>进入 <span>→</span></strong></a>
+        </div>
+    </section>
+
+    <section class="ov-home-section glass-card">
+        <div class="ov-home-section-head"><h2>从想法到代码的学习路径</h2></div>
+        <div class="ov-path-board">
+            <div class="ov-path-step"><span>1</span><strong>项目构思</strong><small>明确需求与想法</small></div>
+            <div class="ov-path-step"><span>2</span><strong>创建项目</strong><small>建立项目结构</small></div>
+            <div class="ov-path-step"><span>3</span><strong>类模型设计</strong><small>构建类与关系</small></div>
+            <div class="ov-path-step"><span>4</span><strong>UML 表达</strong><small>可视化模型结构</small></div>
+            <div class="ov-path-step"><span>5</span><strong>Java 代码</strong><small>生成 Java 源代码</small></div>
+            <div class="ov-path-step"><span>6</span><strong>代码审查</strong><small>AI 智能审查优化</small></div>
+            <div class="ov-path-step"><span>7</span><strong>知识沉淀</strong><small>总结与复习提升</small></div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

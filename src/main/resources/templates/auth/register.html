@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=auth-copy-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('')}"></nav>
+<main class="auth-container">
+    <section class="soft-card auth-card">
+        <div class="auth-brand-panel">
+            <p class="course-label">Create Account</p>
+            <h1>创建 ObjectVerse 账号</h1>
+            <p>ObjectVerse 用来把课程中的面向对象知识落到项目实践中，帮助你创建项目、设计类结构、维护 UML 类图、生成 Java 代码，并沉淀和分享学习笔记。</p>
+            <div class="chip-list">
+                <span>项目建模</span>
+                <span>类图展示</span>
+                <span>学习笔记</span>
+            </div>
+        </div>
+        <div class="auth-form-panel">
+            <div class="section-heading">
+                <p class="section-label">Register</p>
+                <h2>注册</h2>
+            </div>
+            <p class="error-message" th:if="${errorMessage != null}" th:text="${errorMessage}">错误信息</p>
+            <form class="project-form" action="/register" method="post">
+                <label class="full-row">
+                    用户名
+                    <input type="text" name="username" th:value="${username}" required>
+                </label>
+                <label class="full-row">
+                    昵称
+                    <input type="text" name="nickname" th:value="${nickname}" required>
+                </label>
+                <label class="full-row">
+                    密码
+                    <input type="password" name="password" required>
+                </label>
+                <div class="form-actions">
+                    <button type="submit">注册</button>
+                    <a href="/login">已有账号，去登录</a>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

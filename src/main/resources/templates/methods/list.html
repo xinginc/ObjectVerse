@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>方法设计器 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Method Designer</p>
+            <h1>方法设计器</h1>
+            <p class="page-description">方法表示对象可以执行的行为，合理的方法设计可以体现类的职责和对象协作。</p>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" th:href="@{/projects/{projectId}/classes/{classId}(projectId=${projectId}, classId=${classId})}">返回类详情</a>
+            <a class="primary-link" th:href="@{/projects/{projectId}/classes/{classId}/methods/new(projectId=${projectId}, classId=${classId})}">新建方法</a>
+        </div>
+    </section>
+
+    <section class="table-section">
+        <table class="project-table">
+            <thead>
+            <tr>
+                <th>方法名</th>
+                <th>返回类型</th>
+                <th>参数</th>
+                <th>访问修饰符</th>
+                <th>方法说明</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(methods)}">
+                <td colspan="7" class="empty-cell">暂无方法，请先为当前类定义对象行为。</td>
+            </tr>
+            <tr th:each="method : ${methods}">
+                <td th:text="${method.methodName}">calculateTotal</td>
+                <td th:text="${method.returnType}">void</td>
+                <td th:text="${method.parameters}">Long id</td>
+                <td><span class="status-badge" th:text="${method.visibility}">PUBLIC</span></td>
+                <td th:text="${method.description}">计算对象的业务结果。</td>
+                <td th:text="${#temporals.format(method.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-05 20:30</td>
+                <td class="action-cell">
+                    <a th:href="@{/projects/{projectId}/classes/{classId}/methods/{methodId}/edit(projectId=${projectId}, classId=${classId}, methodId=${method.id})}">编辑</a>
+                    <form th:action="@{/projects/{projectId}/classes/{classId}/methods/{methodId}/delete(projectId=${projectId}, classId=${classId}, methodId=${method.id})}" method="post">
+                        <button type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

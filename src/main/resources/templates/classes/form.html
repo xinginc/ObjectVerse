@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${formTitle} + ' - ObjectVerse'">类表单 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Class Abstraction</p>
+            <h1 th:text="${formTitle}">新建类抽象</h1>
+            <p class="page-description">把业务对象抽象为 Java 类，并定义它的封装边界和基础说明。</p>
+        </div>
+        <a class="secondary-link" th:href="@{/projects/{projectId}/classes(projectId=${projectId})}">返回类列表</a>
+    </section>
+
+    <section class="form-section">
+        <form class="project-form"
+              th:object="${oopClass}"
+              th:action="${oopClass.id == null} ? @{/projects/{projectId}/classes(projectId=${projectId})} : @{/projects/{projectId}/classes/{classId}/update(projectId=${projectId}, classId=${oopClass.id})}"
+              method="post">
+            <label>
+                <span>类名</span>
+                <input type="text" th:field="*{className}" placeholder="例如：Student、Course、Order" required>
+            </label>
+
+            <label>
+                <span>包名</span>
+                <input type="text" th:field="*{packageName}" placeholder="例如：com.example.objectverse.domain">
+            </label>
+
+            <label>
+                <span>访问修饰符</span>
+                <select th:field="*{visibility}">
+                    <option value="PUBLIC">PUBLIC</option>
+                    <option value="PROTECTED">PROTECTED</option>
+                    <option value="PRIVATE">PRIVATE</option>
+                    <option value="PACKAGE_PRIVATE">PACKAGE_PRIVATE</option>
+                </select>
+            </label>
+
+            <label>
+                <span>是否抽象类</span>
+                <select th:field="*{isAbstract}">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </label>
+
+            <label class="full-row">
+                <span>类说明</span>
+                <textarea th:field="*{description}" rows="6" placeholder="说明这个类代表的对象、职责、封装的数据和可能的行为"></textarea>
+            </label>
+
+            <div class="form-actions">
+                <button type="submit">保存类设计</button>
+                <a th:href="@{/projects/{projectId}/classes(projectId=${projectId})}">取消</a>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

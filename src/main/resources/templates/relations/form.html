@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${formTitle} + ' - ObjectVerse 关系设计器'">关系表单 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Class Relation</p>
+            <h1 th:text="${formTitle}">新建类关系</h1>
+            <p class="page-description">选择关系起点类和终点类，用关系类型表达继承、实现、依赖、聚合或组合。</p>
+        </div>
+        <a class="secondary-link" th:href="@{/projects/{projectId}/relations(projectId=${projectId})}">返回关系列表</a>
+    </section>
+
+    <section class="form-section">
+        <form class="project-form"
+              th:object="${relation}"
+              th:action="${relation.id == null} ? @{/projects/{projectId}/relations(projectId=${projectId})} : @{/projects/{projectId}/relations/{relationId}/update(projectId=${projectId}, relationId=${relation.id})}"
+              method="post">
+            <label>
+                <span>起点类</span>
+                <select th:field="*{sourceId}" required>
+                    <option value="">请选择起点类</option>
+                    <option th:each="oopClass : ${classes}"
+                            th:value="${oopClass.id}"
+                            th:text="${oopClass.className}">SourceClass</option>
+                </select>
+            </label>
+
+            <label>
+                <span>终点类</span>
+                <select th:field="*{targetId}" required>
+                    <option value="">请选择终点类</option>
+                    <option th:each="oopClass : ${classes}"
+                            th:value="${oopClass.id}"
+                            th:text="${oopClass.className}">TargetClass</option>
+                </select>
+            </label>
+
+            <label>
+                <span>关系类型</span>
+                <select th:field="*{relationType}">
+                    <option value="INHERITANCE">INHERITANCE</option>
+                    <option value="IMPLEMENTATION">IMPLEMENTATION</option>
+                    <option value="ASSOCIATION">ASSOCIATION</option>
+                    <option value="DEPENDENCY">DEPENDENCY</option>
+                    <option value="AGGREGATION">AGGREGATION</option>
+                    <option value="COMPOSITION">COMPOSITION</option>
+                </select>
+            </label>
+
+            <label class="full-row">
+                <span>关系说明</span>
+                <textarea th:field="*{description}" rows="6" placeholder="说明这两个类之间为什么存在该关系，以及它们如何协作"></textarea>
+            </label>
+
+            <div class="form-actions">
+                <button type="submit">保存关系设计</button>
+                <a th:href="@{/projects/{projectId}/relations(projectId=${projectId})}">取消</a>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

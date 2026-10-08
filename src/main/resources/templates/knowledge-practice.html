@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识点巩固助手 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+    <style>
+        .knowledge-generate-button {
+            display: inline-flex;
+            min-height: 40px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.2;
+            white-space: nowrap;
+            background: linear-gradient(135deg, #3159f4, #6657ff);
+            border: 1px solid rgba(255, 255, 255, 0.38);
+            border-radius: 12px;
+            box-shadow: 0 14px 28px rgba(49, 89, 244, 0.22);
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('practice')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Knowledge Practice</p>
+            <h1>知识点巩固助手</h1>
+            <p class="page-description">保存代码审查中提炼出的通用 Java/OOP 知识点，并基于这些知识点生成练习题。</p>
+        </div>
+        <div class="header-actions">
+            <form action="/knowledge-practice/generate" method="post">
+                <button class="knowledge-generate-button" type="submit">根据知识点生成题目</button>
+            </form>
+            <a class="secondary-link" href="/code-review">去代码审查</a>
+        </div>
+    </section>
+
+    <section class="knowledge-practice-layout">
+        <div class="detail-section">
+            <div class="section-heading">
+                <p class="section-label">Saved Knowledge</p>
+                <h2>已保存知识点</h2>
+            </div>
+            <div class="empty-state" th:if="${#lists.isEmpty(knowledgeNotes)}">暂无知识点。可以先在代码审查助手里保存“涉及知识点”。</div>
+            <div class="knowledge-point-list" th:if="${!#lists.isEmpty(knowledgeNotes)}">
+                <article th:each="note : ${knowledgeNotes}">
+                    <strong th:text="${note.title}">封装与不可变返回</strong>
+                    <span th:text="${note.category}">封装</span>
+                    <p th:text="${note.content}">封装要求对象保护自己的内部状态。</p>
+                    <small th:text="${#temporals.format(note.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-30 10:00</small>
+                </article>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <div class="section-heading">
+                <p class="section-label">Practice</p>
+                <h2>练习题</h2>
+            </div>
+            <div class="empty-state" th:if="${practiceQuestions == null || #lists.isEmpty(practiceQuestions)}">保存知识点后点击生成题目，这里会出现选择题和简答题。</div>
+            <div class="practice-question-list" th:if="${practiceQuestions != null && !#lists.isEmpty(practiceQuestions)}">
+                <article class="practice-question-card" th:each="question : ${practiceQuestions}">
+                    <span th:text="${question.questionType}">选择题</span>
+                    <h3 th:text="${question.title}">题目</h3>
+                    <p th:text="${question.body}">题干</p>
+                    <details>
+                        <summary>查看参考答案</summary>
+                        <p th:text="${question.answer}">答案</p>
+                    </details>
+                </article>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 代码生成器 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Strategy Code Generator</p>
+            <h1>Java 代码生成器</h1>
+            <p class="page-description">根据当前项目中的类、属性和方法模型生成 Java 源代码，并通过不同策略体现代码生成算法差异。</p>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" th:href="@{/projects/{projectId}(projectId=${projectId})}">返回项目仪表盘</a>
+            <a class="secondary-link" th:href="@{/projects/{projectId}/uml(projectId=${projectId})}">查看 UML</a>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="section-heading">
+            <p class="section-label">Generator</p>
+            <h2>选择类和生成策略</h2>
+        </div>
+        <form class="project-form" th:action="@{/projects/{projectId}/code-generator/generate(projectId=${projectId})}" method="post">
+            <label>
+                <span>选择类</span>
+                <select name="classId" required>
+                    <option value="">请选择要生成代码的类</option>
+                    <option th:each="oopClass : ${classes}" th:value="${oopClass.id}" th:text="${oopClass.className}">Course</option>
+                </select>
+            </label>
+
+            <label>
+                <span>生成策略</span>
+                <select name="strategyType">
+                    <option value="BASIC">BASIC</option>
+                    <option value="ENCAPSULATION" selected>ENCAPSULATION</option>
+                </select>
+            </label>
+
+            <div class="form-actions">
+                <button type="submit">生成 Java 代码</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="table-section generated-files">
+        <div class="section-heading">
+            <p class="section-label">Generated Files</p>
+            <h2>已生成代码文件</h2>
+        </div>
+        <table class="project-table">
+            <thead><tr><th>文件名</th><th>包名</th><th>文件类型</th><th>创建时间</th><th>操作</th></tr></thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(codeFiles)}"><td colspan="5" class="empty-cell">暂无生成代码，请先选择类和策略生成 Java 源代码。</td></tr>
+            <tr th:each="codeFile : ${codeFiles}">
+                <td th:text="${codeFile.fileName}">Course.java</td>
+                <td th:text="${codeFile.packageName}">com.example.domain</td>
+                <td><span class="status-badge" th:text="${codeFile.fileType}">JAVA_CLASS</span></td>
+                <td th:text="${#temporals.format(codeFile.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-05 20:30</td>
+                <td class="action-cell">
+                    <a class="secondary-link code-view-link" th:href="@{/projects/{projectId}/code-files/{codeFileId}(projectId=${projectId}, codeFileId=${codeFile.id})}">查看代码</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

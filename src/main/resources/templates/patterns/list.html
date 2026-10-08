@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设计模式应用说明 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Design Patterns</p>
+            <h1>设计模式应用说明</h1>
+            <p class="page-description">这里说明 ObjectVerse 课程项目中已经真实使用或计划使用的设计模式，以及它们对应的代码结构。</p>
+        </div>
+        <a class="secondary-link" th:href="@{/projects/{projectId}(projectId=${projectId})}">返回项目详情</a>
+    </section>
+
+    <section class="pattern-grid">
+        <article class="pattern-card pattern-card-active">
+            <p class="section-label">已落地</p>
+            <h2>策略模式</h2>
+            <p>对应代码：`CodeGenerateStrategy`、`BasicJavaClassGenerateStrategy`、`EncapsulationCodeGenerateStrategy`。</p>
+            <p>`CodeGenerateService` 根据 `strategyType` 选择不同 `CodeGenerateStrategy`，不同策略生成不同风格的 Java 代码，Controller 不直接关心具体生成算法。</p>
+        </article>
+
+        <article class="pattern-card pattern-card-active">
+            <p class="section-label">已落地</p>
+            <h2>工厂模式</h2>
+            <p>对应代码：`AiAgentFactory`、`AiAgent`、`RequirementAnalysisAgent`、`ClassDesignAgent`、`CodeReviewAgent`。</p>
+            <p>`AiAgentFactory` 根据 `taskType` 创建不同 Mock AI Agent，业务层通过 Workflow 间接使用工厂，Controller 不直接 new 具体 Agent。</p>
+        </article>
+
+        <article class="pattern-card pattern-card-active">
+            <p class="section-label">已落地</p>
+            <h2>模板方法模式</h2>
+            <p>对应代码：`AbstractAiWorkflow`、`RequirementAnalysisWorkflow`、`CodeReviewWorkflow`。</p>
+            <p>`AbstractAiWorkflow` 固定 buildPrompt、selectAgent、callAgent、formatResult 的执行流程，具体 Workflow 只定义任务差异。</p>
+        </article>
+
+        <article class="pattern-card pattern-card-active">
+            <p class="section-label">初步落地</p>
+            <h2>观察者模式</h2>
+            <p>对应代码：`ProjectModelObserver`、`ProjectModelSubject`、`UmlUpdateObserver`、`CodeRefreshObserver`、`ReviewUpdateObserver`。</p>
+            <p>创建类、属性、方法后，Service 会通知 Subject，Subject 再通知 UML、代码和审查观察者标记模型变化。</p>
+        </article>
+
+        <article class="pattern-card">
+            <p class="section-label">后续扩展</p>
+            <h2>组合模式</h2>
+            <p>计划代码：`OopModelNode`。</p>
+            <p>后续用于组织项目、包、类、接口、方法等树形结构，表达面向对象模型的层级关系。</p>
+        </article>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

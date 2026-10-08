@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${formTitle} + ' - ObjectVerse'">项目表单 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Project Form</p>
+            <h1 th:text="${formTitle}">新建 OOP 建模项目</h1>
+        </div>
+        <a class="secondary-link" href="/projects">返回列表</a>
+    </section>
+
+    <section class="form-section">
+        <form class="project-form"
+              th:object="${project}"
+              th:action="${project.id == null} ? @{/projects} : @{/projects/{id}/update(id=${project.id})}"
+              method="post">
+            <label>
+                <span>项目名称</span>
+                <input type="text" th:field="*{name}" placeholder="例如：校园选课系统" required>
+            </label>
+
+            <label>
+                <span>领域类型</span>
+                <input type="text" th:field="*{domainType}" placeholder="例如：教育、医疗、电商">
+            </label>
+
+            <label>
+                <span>状态</span>
+                <select th:field="*{status}">
+                    <option value="DRAFT">DRAFT</option>
+                    <option value="ANALYZING">ANALYZING</option>
+                    <option value="MODELING">MODELING</option>
+                    <option value="GENERATED">GENERATED</option>
+                    <option value="REVIEWED">REVIEWED</option>
+                    <option value="ARCHIVED">ARCHIVED</option>
+                </select>
+            </label>
+
+            <label>
+                <span>可见性</span>
+                <select th:field="*{visibility}">
+                    <option value="PRIVATE">仅自己可见</option>
+                    <option value="PUBLIC">公开展示</option>
+                </select>
+            </label>
+
+            <label class="full-row">
+                <span>项目描述</span>
+                <textarea th:field="*{description}" rows="6" placeholder="描述这个项目要模拟的面向对象世界、核心对象和业务场景"></textarea>
+            </label>
+
+            <div class="form-actions">
+                <button type="submit">保存项目</button>
+                <a href="/projects">取消</a>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

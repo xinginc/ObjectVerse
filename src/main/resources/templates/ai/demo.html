@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设计模式工作流演示 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('idea')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Design Pattern Demo</p>
+            <h1>设计模式工作流演示</h1>
+            <p class="page-description">该页面用于展示工厂模式和模板方法模式的调用过程，不作为主要 AI Agent 功能。</p>
+        </div>
+        <a class="secondary-link" th:href="@{/projects/{projectId}(projectId=${projectId})}">返回项目仪表盘</a>
+    </section>
+
+    <section class="form-section">
+        <form class="project-form" method="post">
+            <label class="full-row">
+                <span>用户需求或代码片段</span>
+                <textarea name="userInput" rows="8" th:text="${userInput}" placeholder="输入自然语言需求，或粘贴一段 Java 代码用于设计模式工作流演示"></textarea>
+            </label>
+            <div class="form-actions">
+                <button type="submit" th:formaction="@{/projects/{projectId}/ai-demo/requirement-analysis(projectId=${projectId})}">运行需求分析流程</button>
+                <button type="submit" th:formaction="@{/projects/{projectId}/ai-demo/code-review(projectId=${projectId})}">运行代码审查流程</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="code-preview-section" th:if="${result != null and !#strings.isEmpty(result)}">
+        <pre><code th:text="${result}">workflow result</code></pre>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识点笔记 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('notes')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Session Notes</p>
+            <h1>知识点笔记</h1>
+            <p class="page-description">本阶段先把 AI 代码审查生成的知识点笔记暂存在 session 中，后续阶段可持久化到数据库。</p>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" href="/notes-community">学习笔记交流平台</a>
+            <a class="secondary-link" href="/code-review">去代码审查</a>
+        </div>
+    </section>
+
+    <section class="detail-section">
+        <div class="empty-state" th:if="${#lists.isEmpty(knowledgeNotes)}">暂无知识点笔记，可以先去 AI 代码审查生成一条。</div>
+        <div class="knowledge-point-list" th:if="${!#lists.isEmpty(knowledgeNotes)}">
+            <article th:each="note : ${knowledgeNotes}">
+                <strong th:text="${note.title}">代码审查知识点</strong>
+                <span th:text="${note.category}">代码规范</span>
+                <p th:text="${note.content}">内容摘要</p>
+                <p th:text="${#temporals.format(note.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-12 10:00</p>
+            </article>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

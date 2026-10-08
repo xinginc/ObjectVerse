@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.objectverse.mapper.OopRelationMapper">
+
+    <resultMap id="OopRelationResultMap" type="com.example.objectverse.entity.OopRelation">
+        <id property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="sourceType" column="source_type"/>
+        <result property="sourceId" column="source_id"/>
+        <result property="targetType" column="target_type"/>
+        <result property="targetId" column="target_id"/>
+        <result property="relationType" column="relation_type"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="OopRelationColumns">
+        id,
+        project_id,
+        source_type,
+        source_id,
+        target_type,
+        target_id,
+        relation_type,
+        description,
+        create_time,
+        update_time,
+        deleted
+    </sql>
+
+    <select id="findByProjectId" resultMap="OopRelationResultMap">
+        SELECT
+        <include refid="OopRelationColumns"/>
+        FROM oop_relation
+        WHERE project_id = #{projectId}
+          AND deleted = 0
+        ORDER BY create_time DESC, id DESC
+    </select>
+
+    <select id="findById" resultMap="OopRelationResultMap">
+        SELECT
+        <include refid="OopRelationColumns"/>
+        FROM oop_relation
+        WHERE id = #{id}
+          AND deleted = 0
+    </select>
+
+    <insert id="insert" parameterType="com.example.objectverse.entity.OopRelation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO oop_relation (
+            project_id,
+            source_type,
+            source_id,
+            target_type,
+            target_id,
+            relation_type,
+            description,
+            create_time,
+            update_time,
+            deleted
+        ) VALUES (
+            #{projectId},
+            #{sourceType},
+            #{sourceId},
+            #{targetType},
+            #{targetId},
+            #{relationType},
+            #{description},
+            #{createTime},
+            #{updateTime},
+            #{deleted}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.objectverse.entity.OopRelation">
+        UPDATE oop_relation
+        SET
+            source_type = #{sourceType},
+            source_id = #{sourceId},
+            target_type = #{targetType},
+            target_id = #{targetId},
+            relation_type = #{relationType},
+            description = #{description},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+
+    <update id="deleteById">
+        UPDATE oop_relation
+        SET
+            deleted = 1,
+            update_time = NOW()
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+</mapper>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习笔记交流平台 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=notes-profile-real-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('notes')}"></nav>
+<main class="page-shell notes-page">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Notes Community</p>
+            <h1>学习笔记交流平台</h1>
+            <p class="page-description">支持用户上传 Java/OOP 学习笔记，开放交流、互相收藏与点赞，促进共同学习和知识沉淀。</p>
+        </div>
+        <div class="header-actions">
+            <a class="primary-link" href="/notes-community/new">创建笔记</a>
+        </div>
+    </section>
+
+    <section class="community-feed notes-feed-grid" th:if="${!#lists.isEmpty(communityNotes)}">
+        <article class="community-note-card note-card-link" th:each="note : ${communityNotes}">
+            <a th:href="@{/notes-community/{id}(id=${note.id})}">
+                <div class="community-note-image" th:if="${!#strings.isEmpty(note.imageUrl)}">
+                    <img th:src="${note.imageUrl}" th:alt="${note.title}">
+                </div>
+                <div class="community-note-image note-image-placeholder" th:if="${#strings.isEmpty(note.imageUrl)}">
+                    <span>ObjectVerse</span>
+                </div>
+                <div class="community-note-body">
+                    <div class="note-card-topline">
+                        <span th:text="${#strings.isEmpty(note.category) ? 'Java/OOP' : note.category}">Java/OOP</span>
+                        <small th:text="${#temporals.format(note.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-30</small>
+                    </div>
+                    <h2 th:text="${note.title}">封装学习卡片</h2>
+                    <p th:text="${#strings.isEmpty(note.description) ? note.content : note.description}">笔记摘要</p>
+                    <div class="tag-list" th:if="${!#strings.isEmpty(note.tags)}">
+                        <span th:each="tag : ${#strings.arraySplit(note.tags, ',')}" th:text="${#strings.trim(tag)}">Java</span>
+                    </div>
+                    <div class="note-actions-line">
+                        <span th:text="|点赞 ${note.likeCount == null ? 0 : note.likeCount}|">点赞 0</span>
+                        <span th:text="|收藏 ${note.favoriteCount == null ? 0 : note.favoriteCount}|">收藏 0</span>
+                    </div>
+                </div>
+            </a>
+        </article>
+    </section>
+
+    <section class="detail-section empty-state" th:if="${#lists.isEmpty(communityNotes)}">
+        还没有公开学习笔记，点击右上角“创建笔记”发布第一篇。
+    </section>
+</main>
+</body>
+</html>

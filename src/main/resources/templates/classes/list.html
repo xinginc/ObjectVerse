@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>类设计器 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Class Designer</p>
+            <h1>类设计器</h1>
+            <p class="page-description">在这里为当前项目抽象核心类，定义类名、包名、访问修饰符和类说明。</p>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" th:href="@{/projects/{id}(id=${projectId})}">返回项目详情</a>
+            <a class="primary-link" th:href="@{/projects/{projectId}/classes/new(projectId=${projectId})}">新建类</a>
+        </div>
+    </section>
+
+    <section class="table-section">
+        <table class="project-table">
+            <thead>
+            <tr>
+                <th>类名</th>
+                <th>包名</th>
+                <th>访问修饰符</th>
+                <th>抽象类</th>
+                <th>类说明</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(classes)}">
+                <td colspan="7" class="empty-cell">暂无类抽象，请先为当前项目设计核心类。</td>
+            </tr>
+            <tr th:each="oopClass : ${classes}">
+                <td th:text="${oopClass.className}">Course</td>
+                <td th:text="${oopClass.packageName}">com.example.domain</td>
+                <td><span class="status-badge" th:text="${oopClass.visibility}">PUBLIC</span></td>
+                <td th:text="${oopClass.isAbstract} ? '是' : '否'">否</td>
+                <td th:text="${oopClass.description}">课程类，封装课程编号、名称和学分等信息。</td>
+                <td th:text="${#temporals.format(oopClass.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-05 20:30</td>
+                <td class="action-cell">
+                    <a th:href="@{/projects/{projectId}/classes/{classId}(projectId=${projectId}, classId=${oopClass.id})}">详情</a>
+                    <a th:href="@{/projects/{projectId}/classes/{classId}/edit(projectId=${projectId}, classId=${oopClass.id})}">编辑</a>
+                    <form th:action="@{/projects/{projectId}/classes/{classId}/delete(projectId=${projectId}, classId=${oopClass.id})}" method="post">
+                        <button type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

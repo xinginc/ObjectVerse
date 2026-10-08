@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UML 类图展示 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">UML Class Diagram</p>
+            <h1>UML 类图展示</h1>
+            <p class="page-description">根据当前项目中的类、属性、方法和关系生成 UML 类图，帮助直观查看类结构与关联。</p>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" th:href="@{/projects/{projectId}(projectId=${projectId})}">返回项目仪表盘</a>
+            <a class="secondary-link" th:href="@{/projects/{projectId}/code-generator(projectId=${projectId})}">生成 Java 代码</a>
+        </div>
+    </section>
+
+    <section class="detail-section uml-render-section">
+        <div class="section-heading">
+            <p class="section-label">Rendered Class Diagram</p>
+            <h2>UML Class Diagram</h2>
+        </div>
+        <div class="uml-render-canvas">
+            <pre class="mermaid" th:text="${diagramText}">classDiagram
+    Animal &lt;|-- Dog
+    Student --&gt; Course
+    Department o-- Employee
+    Order *-- OrderItem</pre>
+        </div>
+    </section>
+
+    <section class="uml-board">
+        <article class="uml-card" th:each="classView : ${classes}">
+            <header class="uml-card-header">
+                <h2 th:text="${classView.oopClass.className}">Pet</h2>
+                <p th:text="${classView.oopClass.packageName}">com.example.domain</p>
+            </header>
+            <div class="uml-card-section">
+                <h3>属性</h3>
+                <ul>
+                    <li th:if="${#lists.isEmpty(classView.attributes)}">暂无属性</li>
+                    <li th:each="attribute : ${classView.attributes}">
+                        <span th:text="${attribute.visibility}">PRIVATE</span>
+                        <span th:text="${attribute.attributeName}">name</span>:
+                        <span th:text="${attribute.attributeType}">String</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="uml-card-section">
+                <h3>方法</h3>
+                <ul>
+                    <li th:if="${#lists.isEmpty(classView.methods)}">暂无方法</li>
+                    <li th:each="method : ${classView.methods}">
+                        <span th:text="${method.visibility}">PUBLIC</span>
+                        <span th:text="${method.methodName}">showBasicInfo</span>(<span th:text="${method.parameters}"></span>):
+                        <span th:text="${method.returnType}">String</span>
+                    </li>
+                </ul>
+            </div>
+        </article>
+    </section>
+
+    <section class="table-section relation-summary">
+        <div class="section-heading">
+            <p class="section-label">Relations</p>
+            <h2>类之间的关系</h2>
+        </div>
+        <table class="project-table">
+            <thead><tr><th>起点类</th><th>终点类</th><th>关系类型</th><th>说明</th></tr></thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(relations)}"><td colspan="4" class="empty-cell">暂无类关系。</td></tr>
+            <tr th:each="relation : ${relations}">
+                <td th:text="${relation.sourceClassName}">Doctor</td>
+                <td th:text="${relation.targetClassName}">Pet</td>
+                <td><span class="status-badge" th:text="${relation.relationType}">COMPOSITION</span></td>
+                <td th:text="${relation.description}">关系说明</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="detail-section relation-summary">
+        <div class="section-heading">
+            <p class="section-label">UML Text</p>
+            <h2>由当前项目模型生成的 UML 文本表示</h2>
+        </div>
+        <div class="code-preview-section">
+            <pre><code th:text="${diagramText}">class Pet {
+- name: String
++ showBasicInfo(): String
+}</code></pre>
+        </div>
+    </section>
+</main>
+<script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        securityLevel: "strict",
+        class: {
+            useMaxWidth: true
+        },
+        themeVariables: {
+            primaryColor: "#ffffff",
+            primaryBorderColor: "#1f2937",
+            primaryTextColor: "#111827",
+            lineColor: "#334155",
+            fontFamily: "Inter, Microsoft YaHei, Arial, sans-serif"
+        }
+    });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

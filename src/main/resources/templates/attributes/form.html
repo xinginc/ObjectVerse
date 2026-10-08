@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${formTitle} + ' - ObjectVerse 属性设计器'">属性表单 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Object State</p>
+            <h1 th:text="${formTitle}">新建属性</h1>
+            <p class="page-description">为类定义内部状态，并通过访问修饰符控制外部对象能否直接访问。</p>
+        </div>
+        <a class="secondary-link" th:href="@{/projects/{projectId}/classes/{classId}/attributes(projectId=${projectId}, classId=${classId})}">返回属性列表</a>
+    </section>
+
+    <section class="form-section">
+        <form class="project-form"
+              th:object="${attribute}"
+              th:action="${attribute.id == null} ? @{/projects/{projectId}/classes/{classId}/attributes(projectId=${projectId}, classId=${classId})} : @{/projects/{projectId}/classes/{classId}/attributes/{attributeId}/update(projectId=${projectId}, classId=${classId}, attributeId=${attribute.id})}"
+              method="post">
+            <label>
+                <span>属性名</span>
+                <input type="text" th:field="*{attributeName}" placeholder="例如：name、age、createTime" required>
+            </label>
+
+            <label>
+                <span>属性类型</span>
+                <input list="attribute-type-options" th:field="*{attributeType}" placeholder="例如：String">
+                <datalist id="attribute-type-options">
+                    <option value="String"></option>
+                    <option value="Integer"></option>
+                    <option value="Long"></option>
+                    <option value="Double"></option>
+                    <option value="Boolean"></option>
+                    <option value="LocalDateTime"></option>
+                </datalist>
+            </label>
+
+            <label>
+                <span>访问修饰符</span>
+                <select th:field="*{visibility}">
+                    <option value="PUBLIC">PUBLIC</option>
+                    <option value="PROTECTED">PROTECTED</option>
+                    <option value="PRIVATE">PRIVATE</option>
+                    <option value="PACKAGE_PRIVATE">PACKAGE_PRIVATE</option>
+                </select>
+            </label>
+
+            <label>
+                <span>默认值</span>
+                <input type="text" th:field="*{defaultValue}" placeholder="例如：0、false、空字符串">
+            </label>
+
+            <label class="full-row">
+                <span>属性说明</span>
+                <textarea th:field="*{description}" rows="6" placeholder="说明该属性表示的对象状态，以及为什么选择当前访问修饰符"></textarea>
+            </label>
+
+            <div class="form-actions">
+                <button type="submit">保存属性设计</button>
+                <a th:href="@{/projects/{projectId}/classes/{classId}/attributes(projectId=${projectId}, classId=${classId})}">取消</a>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

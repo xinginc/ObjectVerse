@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.objectverse.mapper.OopClassMapper">
+
+    <resultMap id="OopClassResultMap" type="com.example.objectverse.entity.OopClass">
+        <id property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="className" column="class_name"/>
+        <result property="packageName" column="package_name"/>
+        <result property="description" column="description"/>
+        <result property="isAbstract" column="is_abstract"/>
+        <result property="visibility" column="visibility"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="OopClassColumns">
+        id,
+        project_id,
+        class_name,
+        package_name,
+        description,
+        is_abstract,
+        visibility,
+        create_time,
+        update_time,
+        deleted
+    </sql>
+
+    <select id="findByProjectId" resultMap="OopClassResultMap">
+        SELECT
+        <include refid="OopClassColumns"/>
+        FROM oop_class
+        WHERE project_id = #{projectId}
+          AND deleted = 0
+        ORDER BY create_time DESC, id DESC
+    </select>
+
+    <select id="findById" resultMap="OopClassResultMap">
+        SELECT
+        <include refid="OopClassColumns"/>
+        FROM oop_class
+        WHERE id = #{id}
+          AND deleted = 0
+    </select>
+
+    <insert id="insert" parameterType="com.example.objectverse.entity.OopClass" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO oop_class (
+            project_id,
+            class_name,
+            package_name,
+            description,
+            is_abstract,
+            visibility,
+            create_time,
+            update_time,
+            deleted
+        ) VALUES (
+            #{projectId},
+            #{className},
+            #{packageName},
+            #{description},
+            #{isAbstract},
+            #{visibility},
+            #{createTime},
+            #{updateTime},
+            #{deleted}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.objectverse.entity.OopClass">
+        UPDATE oop_class
+        SET
+            class_name = #{className},
+            package_name = #{packageName},
+            description = #{description},
+            is_abstract = #{isAbstract},
+            visibility = #{visibility},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+
+    <update id="deleteById">
+        UPDATE oop_class
+        SET
+            deleted = 1,
+            update_time = NOW()
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+</mapper>

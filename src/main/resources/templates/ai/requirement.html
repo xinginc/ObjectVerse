@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目分析助手 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('idea')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Project Analysis Assistant</p>
+            <h1>项目分析助手</h1>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" th:href="@{/projects/{projectId}(projectId=${projectId})}">返回项目仪表盘</a>
+            <a class="secondary-link" th:href="@{/projects/{projectId}/uml(projectId=${projectId})}">跳转 UML 类图</a>
+        </div>
+    </section>
+
+    <section class="requirement-chat-layout">
+        <aside class="requirement-context-panel">
+            <div class="section-heading">
+                <p class="section-label">Project Context</p>
+                <h2>项目上下文</h2>
+            </div>
+            <div class="context-block">
+                <h3>项目信息</h3>
+                <p><strong th:text="${project.name}">项目名称</strong></p>
+                <p th:text="${project.description}">项目描述</p>
+            </div>
+            <div class="context-block">
+                <h3>现有类</h3>
+                <p th:if="${#lists.isEmpty(classViews)}">当前项目暂未定义类。</p>
+                <article class="context-class" th:each="classView : ${classViews}">
+                    <strong th:text="${classView.oopClass.className}">Pet</strong>
+                    <span th:text="${classView.oopClass.packageName}">com.objectverse.demo.pet</span>
+                    <div>
+                        <small>属性</small>
+                        <ul>
+                            <li th:if="${#lists.isEmpty(classView.attributes)}">暂无属性</li>
+                            <li th:each="attribute : ${classView.attributes}" th:text="${attribute.attributeName + ': ' + attribute.attributeType}">name: String</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <small>方法</small>
+                        <ul>
+                            <li th:if="${#lists.isEmpty(classView.methods)}">暂无方法</li>
+                            <li th:each="method : ${classView.methods}" th:text="${method.methodName + '(): ' + method.returnType}">showBasicInfo(): String</li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+            <div class="context-block">
+                <h3>现有关系</h3>
+                <p th:if="${#lists.isEmpty(relationViews)}">当前项目暂未定义类关系。</p>
+                <ul class="context-relation-list">
+                    <li th:each="relation : ${relationViews}">
+                        <span th:text="${relation.sourceClassName}">Doctor</span>
+                        <span> -> </span>
+                        <span th:text="${relation.targetClassName}">Pet</span>
+                        <strong th:text="${relation.relationType}">ASSOCIATION</strong>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="requirement-chat-panel">
+            <div class="chat-window">
+                <div class="chat-empty" th:if="${#lists.isEmpty(chatMessages)}">
+                    你好，我是 ObjectVerse 的项目分析助手。你可以告诉我想新增的业务功能，例如 VIP 充值、库存管理、预约诊疗、支付流程等。
+                </div>
+                <div class="chat-message" th:each="message : ${chatMessages}" th:classappend="${message.role == 'user'} ? ' chat-message-user' : ' chat-message-assistant'">
+                    <div class="chat-bubble">
+                        <div class="chat-role" th:text="${message.role == 'user' ? '你' : 'ObjectVerse Agent'}">ObjectVerse Agent</div>
+                        <p th:text="${message.content}">聊天内容</p>
+                        <time th:text="${#temporals.format(message.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-09 10:00</time>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-suggestion-list">
+                <span>帮我设计 VIP 充值功能</span>
+                <span>帮我检查当前模型还缺什么</span>
+                <span>我想增加预约诊疗和支付流程</span>
+                <span>如何设计医生排班功能</span>
+            </div>
+
+            <div class="chat-input-area">
+                <form th:action="@{/projects/{projectId}/ai/requirement/analyze(projectId=${projectId})}" method="post">
+                    <textarea name="requirementText" rows="5" placeholder="输入自然语言需求，例如：帮我为宠物医院增加 VIP 充值和会员等级功能"></textarea>
+                    <div class="form-actions">
+                        <button type="submit">发送需求</button>
+                    </div>
+                </form>
+                <form th:action="@{/projects/{projectId}/ai/requirement/clear(projectId=${projectId})}" method="post">
+                    <div class="form-actions">
+                        <button type="submit" class="secondary-button">清空对话</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </section>
+
+    <section class="structured-result-panel" th:if="${analysisResult != null}">
+        <div class="section-heading">
+            <p class="section-label">AI Generated Suggestion</p>
+            <h2>本轮 AI 生成的结构化建模建议</h2>
+            <p>这些内容尚未写入项目模型，点击“应用到当前项目模型”后才会进入类设计器、方法设计器、关系设计器，并在 UML 中显示。</p>
+        </div>
+        <article class="pattern-card pattern-card-active">
+            <span>Summary</span>
+            <h3>分析摘要</h3>
+            <p th:text="${analysisResult.summary}">需求分析摘要</p>
+        </article>
+
+        <div class="pattern-grid relation-summary">
+            <article class="pattern-card" th:each="candidateClass : ${analysisResult.candidateClasses}">
+                <span>Candidate Class</span>
+                <h3 th:text="${candidateClass.className}">Appointment</h3>
+                <p th:text="${candidateClass.description}">候选类说明</p>
+                <h4>候选属性</h4>
+                <ul class="suggestion-list">
+                    <li th:if="${#lists.isEmpty(candidateClass.attributes)}">暂无候选属性</li>
+                    <li th:each="attribute : ${candidateClass.attributes}" th:text="${attribute.attributeName + ': ' + attribute.attributeType + ' / ' + attribute.visibility}">status: String</li>
+                </ul>
+                <h4>候选方法</h4>
+                <ul class="suggestion-list">
+                    <li th:if="${#lists.isEmpty(candidateClass.methods)}">暂无候选方法</li>
+                    <li th:each="method : ${candidateClass.methods}" th:text="${method.methodName + '(): ' + method.returnType}">pay(): Boolean</li>
+                </ul>
+            </article>
+        </div>
+
+        <div class="table-section relation-summary">
+            <div class="section-heading"><p class="section-label">Candidate Relations</p><h2>候选关系</h2></div>
+            <table class="project-table">
+                <thead><tr><th>起点类</th><th>终点类</th><th>关系类型</th><th>说明</th></tr></thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(analysisResult.candidateRelations)}"><td colspan="4" class="empty-cell">暂无候选关系。</td></tr>
+                <tr th:each="relation : ${analysisResult.candidateRelations}">
+                    <td th:text="${relation.sourceClassName}">Appointment</td>
+                    <td th:text="${relation.targetClassName}">Payment</td>
+                    <td><span class="status-badge" th:text="${relation.relationType}">DEPENDENCY</span></td>
+                    <td th:text="${relation.description}">关系说明</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="detail-section relation-summary">
+            <div class="section-heading"><p class="section-label">Suggestions</p><h2>建模建议</h2></div>
+            <ul class="suggestion-list">
+                <li th:if="${#lists.isEmpty(analysisResult.suggestions)}">暂无补充建议。</li>
+                <li th:each="suggestion : ${analysisResult.suggestions}" th:text="${suggestion}">建议</li>
+            </ul>
+            <form th:action="@{/projects/{projectId}/ai/requirement/apply(projectId=${projectId})}" method="post" class="form-actions">
+                <button type="submit">应用到当前项目模型</button>
+                <a th:href="@{/projects/{projectId}/uml(projectId=${projectId})}">预览变化</a>
+                <a th:href="@{/projects/{projectId}/uml(projectId=${projectId})}">跳转 UML 类图</a>
+            </form>
+        </div>
+    </section>
+
+    <section class="table-section relation-summary">
+        <details>
+            <summary>历史 AI 分析记录</summary>
+            <table class="project-table">
+                <thead><tr><th>任务类型</th><th>状态</th><th>摘要</th><th>创建时间</th></tr></thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(historyTasks)}"><td colspan="4" class="empty-cell">暂无 AI 分析记录。</td></tr>
+                <tr th:each="task : ${historyTasks}">
+                    <td th:text="${task.taskType}">REQUIREMENT_ANALYSIS</td>
+                    <td><span class="status-badge" th:text="${task.taskStatus}">SUCCESS</span></td>
+                    <td th:text="${task.resultSummary}">摘要</td>
+                    <td th:text="${#temporals.format(task.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-06 10:00</td>
+                </tr>
+                </tbody>
+            </table>
+        </details>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

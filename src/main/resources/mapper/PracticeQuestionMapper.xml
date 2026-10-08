@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.objectverse.mapper.PracticeQuestionMapper">
+
+    <resultMap id="PracticeQuestionResultMap" type="com.example.objectverse.entity.PracticeQuestion">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="knowledgeNoteId" column="knowledge_note_id"/>
+        <result property="questionType" column="question_type"/>
+        <result property="title" column="title"/>
+        <result property="body" column="body"/>
+        <result property="answer" column="answer"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <select id="findByUserId" resultMap="PracticeQuestionResultMap">
+        SELECT id,
+               user_id,
+               knowledge_note_id,
+               question_type,
+               title,
+               body,
+               answer,
+               create_time,
+               update_time,
+               deleted
+        FROM practice_question
+        WHERE user_id = #{userId}
+          AND deleted = 0
+        ORDER BY create_time DESC, id DESC
+    </select>
+
+    <insert id="insert" parameterType="com.example.objectverse.entity.PracticeQuestion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO practice_question (
+            user_id,
+            knowledge_note_id,
+            question_type,
+            title,
+            body,
+            answer,
+            create_time,
+            update_time,
+            deleted
+        ) VALUES (
+            #{userId},
+            #{knowledgeNoteId},
+            #{questionType},
+            #{title},
+            #{body},
+            #{answer},
+            #{createTime},
+            #{updateTime},
+            #{deleted}
+        )
+    </insert>
+
+    <update id="deleteByUserId">
+        UPDATE practice_question
+        SET deleted = 1,
+            update_time = NOW()
+        WHERE user_id = #{userId}
+          AND deleted = 0
+    </update>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.objectverse.mapper.OopAttributeMapper">
+
+    <resultMap id="OopAttributeResultMap" type="com.example.objectverse.entity.OopAttribute">
+        <id property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="classId" column="class_id"/>
+        <result property="attributeName" column="attribute_name"/>
+        <result property="attributeType" column="attribute_type"/>
+        <result property="visibility" column="visibility"/>
+        <result property="defaultValue" column="default_value"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="OopAttributeColumns">
+        id,
+        project_id,
+        class_id,
+        attribute_name,
+        attribute_type,
+        visibility,
+        default_value,
+        description,
+        create_time,
+        update_time,
+        deleted
+    </sql>
+
+    <select id="findByClassId" resultMap="OopAttributeResultMap">
+        SELECT
+        <include refid="OopAttributeColumns"/>
+        FROM oop_attribute
+        WHERE class_id = #{classId}
+          AND deleted = 0
+        ORDER BY create_time DESC, id DESC
+    </select>
+
+    <select id="findById" resultMap="OopAttributeResultMap">
+        SELECT
+        <include refid="OopAttributeColumns"/>
+        FROM oop_attribute
+        WHERE id = #{id}
+          AND deleted = 0
+    </select>
+
+    <insert id="insert" parameterType="com.example.objectverse.entity.OopAttribute" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO oop_attribute (
+            project_id,
+            class_id,
+            attribute_name,
+            attribute_type,
+            visibility,
+            default_value,
+            description,
+            create_time,
+            update_time,
+            deleted
+        ) VALUES (
+            #{projectId},
+            #{classId},
+            #{attributeName},
+            #{attributeType},
+            #{visibility},
+            #{defaultValue},
+            #{description},
+            #{createTime},
+            #{updateTime},
+            #{deleted}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.objectverse.entity.OopAttribute">
+        UPDATE oop_attribute
+        SET
+            attribute_name = #{attributeName},
+            attribute_type = #{attributeType},
+            visibility = #{visibility},
+            default_value = #{defaultValue},
+            description = #{description},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+
+    <update id="deleteById">
+        UPDATE oop_attribute
+        SET
+            deleted = 1,
+            update_time = NOW()
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+</mapper>

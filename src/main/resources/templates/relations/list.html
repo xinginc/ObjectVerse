@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关系设计器 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Relation Designer</p>
+            <h1>关系设计器</h1>
+            <p class="page-description">类关系用于描述对象之间的协作方式，是继承、多态、组合复用和低耦合设计的基础。</p>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" th:href="@{/projects/{projectId}(projectId=${projectId})}">返回项目详情</a>
+            <a class="primary-link" th:href="@{/projects/{projectId}/relations/new(projectId=${projectId})}">新建关系</a>
+        </div>
+    </section>
+
+    <section class="table-section">
+        <table class="project-table">
+            <thead>
+            <tr>
+                <th>起点类 ID</th>
+                <th>终点类 ID</th>
+                <th>关系类型</th>
+                <th>关系说明</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(relations)}">
+                <td colspan="6" class="empty-cell">暂无类关系，请先为当前项目设计类之间的协作关系。</td>
+            </tr>
+            <tr th:each="relation : ${relations}">
+                <td th:text="${relation.sourceId}">1</td>
+                <td th:text="${relation.targetId}">2</td>
+                <td><span class="status-badge" th:text="${relation.relationType}">ASSOCIATION</span></td>
+                <td th:text="${relation.description}">类之间存在业务协作。</td>
+                <td th:text="${#temporals.format(relation.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-05 20:30</td>
+                <td class="action-cell">
+                    <a th:href="@{/projects/{projectId}/relations/{relationId}/edit(projectId=${projectId}, relationId=${relation.id})}">编辑</a>
+                    <form th:action="@{/projects/{projectId}/relations/{relationId}/delete(projectId=${projectId}, relationId=${relation.id})}" method="post">
+                        <button type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

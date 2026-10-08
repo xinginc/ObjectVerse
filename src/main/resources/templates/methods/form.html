@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${formTitle} + ' - ObjectVerse 方法设计器'">方法表单 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Object Behavior</p>
+            <h1 th:text="${formTitle}">新建方法</h1>
+            <p class="page-description">为类定义可执行行为，并通过参数、返回值和方法体描述对象协作方式。</p>
+        </div>
+        <a class="secondary-link" th:href="@{/projects/{projectId}/classes/{classId}/methods(projectId=${projectId}, classId=${classId})}">返回方法列表</a>
+    </section>
+
+    <section class="form-section">
+        <form class="project-form"
+              th:object="${method}"
+              th:action="${method.id == null} ? @{/projects/{projectId}/classes/{classId}/methods(projectId=${projectId}, classId=${classId})} : @{/projects/{projectId}/classes/{classId}/methods/{methodId}/update(projectId=${projectId}, classId=${classId}, methodId=${method.id})}"
+              method="post">
+            <label>
+                <span>方法名</span>
+                <input type="text" th:field="*{methodName}" placeholder="例如：calculateScore、createOrder" required>
+            </label>
+
+            <label>
+                <span>返回类型</span>
+                <input list="return-type-options" th:field="*{returnType}" placeholder="例如：void">
+                <datalist id="return-type-options">
+                    <option value="void"></option>
+                    <option value="String"></option>
+                    <option value="Integer"></option>
+                    <option value="Long"></option>
+                    <option value="Double"></option>
+                    <option value="Boolean"></option>
+                    <option value="LocalDateTime"></option>
+                </datalist>
+            </label>
+
+            <label>
+                <span>参数</span>
+                <input type="text" th:field="*{parameters}" placeholder="例如：Long id, String name">
+            </label>
+
+            <label>
+                <span>访问修饰符</span>
+                <select th:field="*{visibility}">
+                    <option value="PUBLIC">PUBLIC</option>
+                    <option value="PROTECTED">PROTECTED</option>
+                    <option value="PRIVATE">PRIVATE</option>
+                    <option value="PACKAGE_PRIVATE">PACKAGE_PRIVATE</option>
+                </select>
+            </label>
+
+            <label class="full-row">
+                <span>方法说明</span>
+                <textarea th:field="*{description}" rows="4" placeholder="说明这个方法代表的对象行为、职责和协作对象"></textarea>
+            </label>
+
+            <label class="full-row">
+                <span>方法体</span>
+                <textarea th:field="*{methodBody}" rows="8" placeholder="// TODO: 实现方法逻辑"></textarea>
+            </label>
+
+            <div class="form-actions">
+                <button type="submit">保存方法设计</button>
+                <a th:href="@{/projects/{projectId}/classes/{classId}/methods(projectId=${projectId}, classId=${classId})}">取消</a>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

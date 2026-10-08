@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>属性设计器 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Attribute Designer</p>
+            <h1>属性设计器</h1>
+            <p class="page-description">属性表示对象的内部状态，合理的访问修饰符可以体现封装思想。</p>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" th:href="@{/projects/{projectId}/classes/{classId}(projectId=${projectId}, classId=${classId})}">返回类详情</a>
+            <a class="primary-link" th:href="@{/projects/{projectId}/classes/{classId}/attributes/new(projectId=${projectId}, classId=${classId})}">新建属性</a>
+        </div>
+    </section>
+
+    <section class="table-section">
+        <table class="project-table">
+            <thead>
+            <tr>
+                <th>属性名</th>
+                <th>属性类型</th>
+                <th>访问修饰符</th>
+                <th>默认值</th>
+                <th>属性说明</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(attributes)}">
+                <td colspan="7" class="empty-cell">暂无属性，请先为当前类定义对象状态。</td>
+            </tr>
+            <tr th:each="attribute : ${attributes}">
+                <td th:text="${attribute.attributeName}">name</td>
+                <td th:text="${attribute.attributeType}">String</td>
+                <td><span class="status-badge" th:text="${attribute.visibility}">PRIVATE</span></td>
+                <td th:text="${attribute.defaultValue}">未设置</td>
+                <td th:text="${attribute.description}">封装对象名称。</td>
+                <td th:text="${#temporals.format(attribute.createTime, 'yyyy-MM-dd HH:mm')}">2026-06-05 20:30</td>
+                <td class="action-cell">
+                    <a th:href="@{/projects/{projectId}/classes/{classId}/attributes/{attributeId}/edit(projectId=${projectId}, classId=${classId}, attributeId=${attribute.id})}">编辑</a>
+                    <form th:action="@{/projects/{projectId}/classes/{classId}/attributes/{attributeId}/delete(projectId=${projectId}, classId=${classId}, attributeId=${attribute.id})}" method="post">
+                        <button type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

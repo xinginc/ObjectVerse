@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 辅助工具 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('idea')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">AI Tools</p>
+            <h1>AI 辅助工具</h1>
+            <p class="page-description">按任务进入独立助手：项目构思、代码审查和学习笔记沉淀。</p>
+        </div>
+    </section>
+
+    <section class="ai-home-grid">
+        <a class="ai-feature-card" href="/idea-assistant">
+            <span>需求</span>
+            <h2>AI 需求构思</h2>
+            <p>输入系统主题，AI 会给出候选类、属性、方法和类关系建议。</p>
+            <strong>开始构思</strong>
+        </a>
+        <a class="ai-feature-card" href="/code-review">
+            <span>审查</span>
+            <h2>AI 代码审查</h2>
+            <p>粘贴 Java 类代码，AI 会检查封装、继承、多态和设计模式。</p>
+            <strong>开始审查</strong>
+        </a>
+        <a class="ai-feature-card" href="/ai/notes">
+            <span>笔记</span>
+            <h2>知识点笔记</h2>
+            <p>记录封装、继承、多态、单一职责原则、策略模式、工厂模式等知识点。</p>
+            <strong>查看笔记</strong>
+        </a>
+    </section>
+
+    <section class="split-ai-layout relation-summary">
+        <div class="soft-card form-section">
+            <div class="section-heading">
+                <p class="section-label">Examples</p>
+                <h2>可以这样使用</h2>
+            </div>
+            <div class="chip-list">
+                <span>宠物医院系统</span>
+                <span>图书管理系统</span>
+                <span>物流配送系统</span>
+            </div>
+            <p>示例需求：“我想创建一个宠物医院系统，包含预约、问诊、住院和结算功能。”</p>
+            <p>示例代码审查：“粘贴 Java 类代码，AI 会检查封装、继承、多态和设计模式。”</p>
+            <p>示例知识点：“封装、继承、多态、单一职责原则、策略模式、工厂模式。”</p>
+        </div>
+        <div class="gradient-card form-section">
+            <p class="section-label">Preview</p>
+            <h2>先构思，再建模，最后生成代码</h2>
+            <p class="page-description">全局 Agent 适合项目创建前的想法整理；项目工作台适合落地为完整 OOP 模型。</p>
+            <div class="form-actions">
+                <a class="secondary-link" href="/idea-assistant">试试需求构思</a>
+                <a class="secondary-link" href="/projects">进入项目工作台</a>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

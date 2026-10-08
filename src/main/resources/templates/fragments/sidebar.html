@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="top-nav sidebar" th:fragment="sidebar(active)">
+    <a class="sidebar-brand" href="/">
+        <span class="sidebar-logo">OV</span>
+        <span>
+            <strong>ObjectVerse</strong>
+            <small>Java OOP Lab</small>
+        </span>
+    </a>
+
+    <div class="sidebar-nav">
+        <p class="sidebar-section-title">MAIN</p>
+        <a class="sidebar-link" th:classappend="${active == 'home'} ? ' sidebar-link-active'" href="/">
+            <span class="sidebar-icon">✦</span>
+            <span>首页</span>
+        </a>
+        <a class="sidebar-link" th:classappend="${active == 'projects'} ? ' sidebar-link-active'" href="/projects">
+            <span class="sidebar-icon">✦</span>
+            <span>项目工作台</span>
+        </a>
+        <a class="sidebar-link" th:classappend="${active == 'idea'} ? ' sidebar-link-active'" href="/idea-assistant">
+            <span class="sidebar-icon">✦</span>
+            <span>项目构思助手</span>
+        </a>
+        <a class="sidebar-link" th:classappend="${active == 'review'} ? ' sidebar-link-active'" href="/code-review">
+            <span class="sidebar-icon">✦</span>
+            <span>代码审查助手</span>
+        </a>
+        <a class="sidebar-link" th:classappend="${active == 'practice'} ? ' sidebar-link-active'" href="/knowledge-practice">
+            <span class="sidebar-icon">✦</span>
+            <span>知识点巩固助手</span>
+        </a>
+        <a class="sidebar-link" th:classappend="${active == 'notes'} ? ' sidebar-link-active'" href="/notes-community">
+            <span class="sidebar-icon">✦</span>
+            <span>学习笔记交流平台</span>
+        </a>
+    </div>
+
+    <div class="sidebar-account">
+        <p class="sidebar-section-title">ACCOUNT</p>
+        <section class="sidebar-user-card" th:if="${session.loginUser == null}">
+            <div class="sidebar-user-head">
+                <div class="sidebar-avatar" aria-hidden="true">U</div>
+                <div>
+                    <strong>用户未登录</strong>
+                    <p>登录后可创建项目、保存模型与学习记录</p>
+                </div>
+            </div>
+            <a class="sidebar-login-button" href="/login">立即登录</a>
+        </section>
+
+        <section class="sidebar-user-card" th:if="${session.loginUser != null}">
+            <div class="sidebar-user-head">
+                <div class="sidebar-avatar" aria-hidden="true">U</div>
+                <div>
+                    <strong th:text="${#strings.isEmpty(session.loginUser.nickname) ? session.loginUser.username : session.loginUser.nickname}">用户</strong>
+                    <p th:text="${session.loginUser.username}">username</p>
+                </div>
+            </div>
+            <a class="sidebar-profile-link" href="/profile">个人主页</a>
+            <form action="/logout" method="post">
+                <button type="submit">退出登录</button>
+            </form>
+        </section>
+    </div>
+</nav>
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.objectverse.mapper.AiTaskMapper">
+
+    <resultMap id="AiTaskResultMap" type="com.example.objectverse.entity.AiTask">
+        <id property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="taskType" column="task_type"/>
+        <result property="taskStatus" column="task_status"/>
+        <result property="userInput" column="user_input"/>
+        <result property="resultSummary" column="result_summary"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.objectverse.entity.AiTask" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ai_task (
+            project_id,
+            task_type,
+            task_status,
+            user_input,
+            result_summary,
+            create_time,
+            update_time,
+            deleted
+        ) VALUES (
+            #{projectId},
+            #{taskType},
+            #{taskStatus},
+            #{userInput},
+            #{resultSummary},
+            #{createTime},
+            #{updateTime},
+            #{deleted}
+        )
+    </insert>
+
+    <select id="findByProjectId" resultMap="AiTaskResultMap">
+        SELECT
+            id,
+            project_id,
+            task_type,
+            task_status,
+            user_input,
+            result_summary,
+            create_time,
+            update_time,
+            deleted
+        FROM ai_task
+        WHERE project_id = #{projectId}
+          AND deleted = 0
+        ORDER BY create_time DESC, id DESC
+    </select>
+</mapper>

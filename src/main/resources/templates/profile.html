@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=profile-notes-auth-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('')}"></nav>
+<main class="page-shell profile-page">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Profile</p>
+            <h1>个人主页</h1>
+            <p class="page-description">维护个人资料，查看自己创建的项目和笔记，以及收藏过的学习笔记。</p>
+        </div>
+    </section>
+
+    <section class="profile-layout">
+        <aside class="profile-card detail-section profile-info-panel">
+            <div class="profile-avatar" aria-hidden="true" th:text="${#strings.substring(#strings.isEmpty(loginUser.nickname) ? loginUser.username : loginUser.nickname, 0, 1)}">U</div>
+            <div>
+                <h2 th:text="${#strings.isEmpty(loginUser.nickname) ? loginUser.username : loginUser.nickname}">用户</h2>
+                <p th:text="${loginUser.username}">username</p>
+                <form class="project-form profile-form" action="/profile" method="post">
+                    <label>
+                        昵称
+                        <input name="nickname" type="text" th:value="${loginUser.nickname}" placeholder="你的昵称">
+                    </label>
+                    <label>
+                        邮箱
+                        <input name="email" type="email" th:value="${loginUser.email}" placeholder="name@example.com">
+                    </label>
+                    <label>
+                        年龄
+                        <input name="age" type="number" min="1" max="120" th:value="${loginUser.age}" placeholder="例如：20">
+                    </label>
+                    <label>
+                        职业
+                        <input name="occupation" type="text" th:value="${loginUser.occupation}" placeholder="例如：学生 / Java 开发">
+                    </label>
+                    <label class="full-row">
+                        个人简介
+                        <textarea name="bio" rows="4" placeholder="简单介绍你的学习方向或项目兴趣。" th:text="${loginUser.bio}"></textarea>
+                    </label>
+                    <div class="form-actions full-row">
+                        <button type="submit">保存个人信息</button>
+                    </div>
+                </form>
+            </div>
+        </aside>
+
+        <section class="profile-content-stack">
+            <div class="detail-section">
+                <div class="section-heading">
+                    <p class="section-label">Projects</p>
+                    <h2>我创建的项目</h2>
+                </div>
+                <div class="profile-item-list" th:if="${!#lists.isEmpty(myProjects)}">
+                    <a class="profile-item" th:each="project : ${myProjects}" th:href="@{/projects/{id}(id=${project.id})}">
+                        <strong th:text="${project.name}">项目名称</strong>
+                        <span th:text="${#strings.isEmpty(project.description) ? '暂无项目描述' : project.description}">项目描述</span>
+                    </a>
+                </div>
+                <div class="empty-state" th:if="${#lists.isEmpty(myProjects)}">你还没有创建项目。</div>
+            </div>
+
+            <div class="detail-section">
+                <div class="section-heading">
+                    <p class="section-label">Notes</p>
+                    <h2>我发布的笔记</h2>
+                </div>
+                <div class="profile-item-list" th:if="${!#lists.isEmpty(myNotes)}">
+                    <a class="profile-item" th:each="note : ${myNotes}" th:href="@{/notes-community/{id}(id=${note.id})}">
+                        <strong th:text="${note.title}">笔记标题</strong>
+                        <span th:text="${#strings.isEmpty(note.description) ? note.content : note.description}">笔记摘要</span>
+                    </a>
+                </div>
+                <div class="empty-state" th:if="${#lists.isEmpty(myNotes)}">你还没有在学习笔记交流平台发布公开笔记。</div>
+            </div>
+
+            <div class="detail-section">
+                <div class="section-heading">
+                    <p class="section-label">Favorites</p>
+                    <h2>我收藏的笔记</h2>
+                </div>
+                <div class="profile-item-list" th:if="${!#lists.isEmpty(favoriteNotes)}">
+                    <a class="profile-item" th:each="note : ${favoriteNotes}" th:href="@{/notes-community/{id}(id=${note.id})}">
+                        <strong th:text="${note.title}">收藏笔记</strong>
+                        <span th:text="${#strings.isEmpty(note.description) ? note.content : note.description}">笔记摘要</span>
+                    </a>
+                </div>
+                <div class="empty-state" th:if="${#lists.isEmpty(favoriteNotes)}">你还没有收藏别人的学习笔记。</div>
+            </div>
+        </section>
+    </section>
+</main>
+</body>
+</html>

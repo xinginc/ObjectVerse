@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.objectverse.mapper.OopMethodMapper">
+
+    <resultMap id="OopMethodResultMap" type="com.example.objectverse.entity.OopMethod">
+        <id property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="classId" column="class_id"/>
+        <result property="methodName" column="method_name"/>
+        <result property="returnType" column="return_type"/>
+        <result property="parameters" column="parameters"/>
+        <result property="visibility" column="visibility"/>
+        <result property="description" column="description"/>
+        <result property="methodBody" column="method_body"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="OopMethodColumns">
+        id,
+        project_id,
+        class_id,
+        method_name,
+        return_type,
+        `parameters`,
+        visibility,
+        description,
+        method_body,
+        create_time,
+        update_time,
+        deleted
+    </sql>
+
+    <select id="findByClassId" resultMap="OopMethodResultMap">
+        SELECT
+        <include refid="OopMethodColumns"/>
+        FROM oop_method
+        WHERE class_id = #{classId}
+          AND deleted = 0
+        ORDER BY create_time DESC, id DESC
+    </select>
+
+    <select id="findById" resultMap="OopMethodResultMap">
+        SELECT
+        <include refid="OopMethodColumns"/>
+        FROM oop_method
+        WHERE id = #{id}
+          AND deleted = 0
+    </select>
+
+    <insert id="insert" parameterType="com.example.objectverse.entity.OopMethod" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO oop_method (
+            project_id,
+            class_id,
+            method_name,
+            return_type,
+            `parameters`,
+            visibility,
+            description,
+            method_body,
+            create_time,
+            update_time,
+            deleted
+        ) VALUES (
+            #{projectId},
+            #{classId},
+            #{methodName},
+            #{returnType},
+            #{parameters},
+            #{visibility},
+            #{description},
+            #{methodBody},
+            #{createTime},
+            #{updateTime},
+            #{deleted}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.objectverse.entity.OopMethod">
+        UPDATE oop_method
+        SET
+            method_name = #{methodName},
+            return_type = #{returnType},
+            `parameters` = #{parameters},
+            visibility = #{visibility},
+            description = #{description},
+            method_body = #{methodBody},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+
+    <update id="deleteById">
+        UPDATE oop_method
+        SET
+            deleted = 1,
+            update_time = NOW()
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+</mapper>

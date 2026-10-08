@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目工作台 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('projects')}"></nav>
+<main class="page-shell project-workspace-page">
+    <section class="workspace-hero glass-card">
+        <div>
+            <p class="section-label">Project Workspace</p>
+            <h1>项目工作台</h1>
+            <p class="page-description">在这里创建与管理你的 Java OOP 建模项目，继续完善类、属性、方法与关系设计，也可以浏览其他用户公开的优秀项目案例，获取灵感与参考。</p>
+            <div class="workspace-metrics">
+                <article>
+                    <span>M</span>
+                    <div><small>我的项目</small><strong th:text="${myProjectCount}">0</strong></div>
+                </article>
+                <article>
+                    <span>G</span>
+                    <div><small>公开项目</small><strong th:text="${publicProjectCount}">0</strong></div>
+                </article>
+                <article>
+                    <span>R</span>
+                    <div><small>推荐项目</small><strong th:text="${recommendedProjectCount}">0</strong></div>
+                </article>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a class="outline-button" href="/idea-assistant">先让 AI 构思</a>
+            <a class="gradient-button" href="/projects/new">新建项目</a>
+        </div>
+    </section>
+
+    <section class="workspace-project-layout">
+        <div class="workspace-panel glass-card my-project-panel">
+            <div class="workspace-panel-heading">
+                <div>
+                    <h2>我的项目</h2>
+                    <p>继续完善你创建的项目模型</p>
+                </div>
+                <a href="/projects/new">新建项目 &gt;</a>
+            </div>
+
+            <div class="project-list-stack">
+                <div class="empty-state" th:if="${#lists.isEmpty(myProjects)}">暂无项目，先创建一个面向对象建模项目吧。</div>
+                <article class="workspace-project-row" th:each="project : ${myProjects}">
+                    <div class="project-letter" th:text="${#strings.substring(project.name, 0, 1)}">P</div>
+                    <div class="project-row-main">
+                        <div class="project-row-title">
+                            <h3 th:text="${project.name}">宠物医院对象建模系统 V2</h3>
+                            <span class="visibility-badge visibility-public" th:if="${project.visibility == 'PUBLIC'}">公开展示</span>
+                            <span class="visibility-badge" th:if="${project.visibility != 'PUBLIC'}">仅自己可见</span>
+                        </div>
+                        <p th:text="${project.description}">用于测试 ObjectVerse 的第一个面向对象建模项目</p>
+                        <div class="project-row-stats">
+                            <span>类 <strong th:text="${classCounts[project.id]}">0</strong></span>
+                            <span>属性 <strong th:text="${attributeCounts[project.id]}">0</strong></span>
+                            <span>方法 <strong th:text="${methodCounts[project.id]}">0</strong></span>
+                            <span>关系 <strong th:text="${relationCounts[project.id]}">0</strong></span>
+                        </div>
+                    </div>
+                    <div class="project-row-actions">
+                        <a class="row-pill-link" th:href="@{/projects/{id}(id=${project.id})}">进入项目</a>
+                        <a th:href="@{/projects/{id}/edit(id=${project.id})}">编辑</a>
+                        <form th:if="${project.visibility != 'PUBLIC'}" th:action="@{/projects/{id}/visibility(id=${project.id})}" method="post">
+                            <input type="hidden" name="visibility" value="PUBLIC">
+                            <button type="submit">公开</button>
+                        </form>
+                        <form th:if="${project.visibility == 'PUBLIC'}" th:action="@{/projects/{id}/visibility(id=${project.id})}" method="post">
+                            <input type="hidden" name="visibility" value="PRIVATE">
+                            <button type="submit">取消公开</button>
+                        </form>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <aside class="workspace-panel glass-card public-project-panel">
+            <div class="workspace-panel-heading">
+                <div>
+                    <h2>推荐项目</h2>
+                    <p>浏览其他用户公开的项目案例</p>
+                </div>
+                <a href="/projects">换一批</a>
+            </div>
+
+            <div class="public-project-list">
+                <div class="empty-state" th:if="${#lists.isEmpty(publicProjects)}">暂无公开项目。你可以先把自己的项目设为公开展示。</div>
+                <article class="public-project-card" th:each="project : ${publicProjects}">
+                    <div class="project-letter public-letter" th:text="${#strings.substring(project.name, 0, 1)}">T</div>
+                    <div>
+                        <h3 th:text="${project.name}">校园二手交易平台</h3>
+                        <p th:text="${project.description}">支持发布商品、聊天沟通与订单管理</p>
+                        <div class="tag-list">
+                            <span>Java</span>
+                            <span>OOP</span>
+                            <span>UML</span>
+                        </div>
+                    </div>
+                    <a th:href="@{/projects/{id}(id=${project.id})}">查看详情 &gt;</a>
+                </article>
+            </div>
+        </aside>
+    </section>
+</main>
+</body>
+</html>

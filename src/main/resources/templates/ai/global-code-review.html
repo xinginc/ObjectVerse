@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码审查助手 - ObjectVerse</title>
+    <link rel="stylesheet" href="/css/objectverse.css?v=unified-gap-48-20260630-1">
+    <style>
+        .review-stack {
+            display: grid;
+            gap: 14px;
+        }
+
+        .review-source-card,
+        .review-output-card {
+            border-radius: 18px !important;
+        }
+
+        .review-source-card {
+            padding: 18px !important;
+        }
+
+        .review-source-card .project-form {
+            grid-template-columns: 1fr;
+        }
+
+        .review-source-card textarea {
+            min-height: 210px;
+        }
+
+        .review-output-card {
+            min-height: 260px;
+            padding: 18px !important;
+        }
+
+        .review-output-card.review-output-empty {
+            min-height: 130px;
+            padding: 14px 18px !important;
+        }
+
+        .review-output-empty .section-heading {
+            margin-bottom: 8px;
+        }
+
+        .review-output-empty .section-heading h2 {
+            margin: 2px 0 0;
+            font-size: 20px;
+        }
+
+        .review-output-empty .empty-state {
+            min-height: 54px;
+            display: grid;
+            place-items: center;
+            margin: 0;
+            padding: 10px 14px;
+            font-size: 13px;
+            line-height: 1.45;
+            text-align: center;
+        }
+
+        .review-result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .review-knowledge {
+            margin-top: 14px;
+        }
+
+        .review-code {
+            margin-top: 14px;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{fragments/sidebar :: sidebar('review')}"></nav>
+<main class="page-shell">
+    <section class="page-header">
+        <div>
+            <p class="section-label">Code Review Assistant</p>
+            <h1>代码审查助手</h1>
+            <p class="page-description">粘贴 Java 代码，查看审查结果，并把通用 Java/OOP 知识点保存到知识点巩固助手。</p>
+        </div>
+        <div class="header-actions">
+            <a class="secondary-link" href="/knowledge-practice">知识点巩固</a>
+        </div>
+    </section>
+
+    <section class="review-stack">
+        <section class="review-source-card glass-card">
+            <div class="section-heading">
+                <p class="section-label">Java Source</p>
+                <h2>粘贴需要审查的代码</h2>
+            </div>
+            <form class="project-form" action="/code-review/analyze" method="post">
+                <label class="full-row">
+                    Java 代码
+                    <textarea name="codeText" rows="12" placeholder="public class OrderService { ... }" th:text="${codeText}"></textarea>
+                </label>
+                <div class="form-actions">
+                    <button class="secondary-button" type="button" onclick="document.querySelector('[name=codeText]').value='public class OrderService {\n    public double total;\n\n    public void pay(double amount) {\n        if (amount > 0) {\n            total = total + amount;\n        }\n    }\n}'">示例代码</button>
+                    <button type="submit">开始审查</button>
+                    <button class="secondary-button" type="submit" formaction="/code-review/clear">清空</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="review-output-card glass-card" th:classappend="${reviewResult == null} ? ' review-output-empty'">
+            <div class="section-heading">
+                <p class="section-label">Review Result</p>
+                <h2>审查结果</h2>
+            </div>
+            <div class="empty-state" th:if="${reviewResult == null}">提交代码后，这里会展示总体评价、发现的问题、改进建议、涉及知识点和改进后的代码片段。</div>
+            <div th:if="${reviewResult != null}">
+                <article class="pattern-card pattern-card-active">
+                    <span>Summary</span>
+                    <h3>代码总体评价</h3>
+                    <p th:text="${reviewResult.summary}">总体评价</p>
+                </article>
+
+                <div class="review-result-grid relation-summary">
+                    <article class="pattern-card">
+                        <span>Issues</span>
+                        <h3>发现的问题</h3>
+                        <ul class="suggestion-list">
+                            <li th:if="${#lists.isEmpty(reviewResult.issues)}">暂无明显问题</li>
+                            <li th:each="issue : ${reviewResult.issues}" th:text="${issue}">问题</li>
+                        </ul>
+                    </article>
+                    <article class="pattern-card">
+                        <span>Suggestions</span>
+                        <h3>面向对象改进建议</h3>
+                        <ul class="suggestion-list">
+                            <li th:if="${#lists.isEmpty(reviewResult.suggestions)}">暂无修改建议</li>
+                            <li th:each="suggestion : ${reviewResult.suggestions}" th:text="${suggestion}">建议</li>
+                        </ul>
+                    </article>
+                </div>
+
+                <section class="detail-section relation-summary review-knowledge">
+                    <div class="section-heading">
+                        <p class="section-label">Knowledge</p>
+                        <h2>涉及知识点</h2>
+                    </div>
+                    <div class="knowledge-point-list">
+                        <article th:each="point, pointStat : ${reviewResult.knowledgePoints}">
+                            <strong th:text="${point.title}">封装与不可变返回</strong>
+                            <span th:text="${point.category}">封装</span>
+                            <p th:text="${point.explanation}">getter 不应返回可变对象的原始引用。</p>
+                            <form th:action="@{/code-review/save-knowledge/{index}(index=${pointStat.index})}" method="post">
+                                <button type="submit">保存到知识点巩固</button>
+                            </form>
+                        </article>
+                        <p th:if="${#lists.isEmpty(reviewResult.knowledgePoints)}">暂无知识点归纳</p>
+                    </div>
+                </section>
+
+                <section class="detail-section relation-summary review-code">
+                    <h2>改进后的代码片段</h2>
+                    <pre class="code-block"><code th:text="${reviewResult.improvedCode}">public class Demo {}</code></pre>
+                </section>
+            </div>
+        </section>
+    </section>
+</main>
+</body>
+</html>
